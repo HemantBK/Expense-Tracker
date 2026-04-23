@@ -20,7 +20,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - name: ktlint
         run: ./gradlew ktlintCheck --continue
       - name: detekt
@@ -43,7 +43,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew testDebugUnitTest
       - uses: actions/upload-artifact@v4
         if: always()
@@ -61,7 +61,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew :app:lintRelease
       - uses: actions/upload-artifact@v4
         if: always()
@@ -79,7 +79,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew :app:assembleDebug
       - uses: actions/upload-artifact@v4
         with:
@@ -96,7 +96,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - name: Check for blocked proprietary groups
         run: |
           ./gradlew :app:dependencies --configuration releaseRuntimeClasspath > deps.txt || true
