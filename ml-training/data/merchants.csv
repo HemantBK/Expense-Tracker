@@ -1,0 +1,138 @@
+merchant,category
+ZOMATO,Food
+SWIGGY,Food
+SWIGGY INSTAMART,Food
+DOMINOS,Food
+PIZZA HUT,Food
+MCDONALDS,Food
+KFC,Food
+BURGER KING,Food
+SUBWAY,Food
+STARBUCKS,Food
+CAFE COFFEE DAY,Food
+HALDIRAM,Food
+BIRYANI BLUES,Food
+BEHROUZ BIRYANI,Food
+FAASOS,Food
+BOX8,Food
+FRESHMENU,Food
+DUNKIN DONUTS,Food
+BARBEQUE NATION,Food
+SOCIAL,Food
+UBER,Transport
+UBER INDIA,Transport
+OLA,Transport
+OLA CABS,Transport
+RAPIDO,Transport
+BMTC,Transport
+BEST,Transport
+DMRC,Transport
+DELHI METRO,Transport
+MUMBAI METRO,Transport
+IRCTC,Transport
+MAKEMYTRIP,Transport
+GOIBIBO,Transport
+YATRA,Transport
+CLEARTRIP,Transport
+INDIGO,Transport
+SPICEJET,Transport
+VISTARA,Transport
+AIR INDIA,Transport
+REDBUS,Transport
+OYO,Transport
+TREEBO,Transport
+FABHOTELS,Transport
+AMAZON,Shopping
+AMAZON PAY,Shopping
+FLIPKART,Shopping
+MYNTRA,Shopping
+AJIO,Shopping
+MEESHO,Shopping
+NYKAA,Shopping
+TATA CLIQ,Shopping
+TATACLIQ,Shopping
+SNAPDEAL,Shopping
+SHOPCLUES,Shopping
+LENSKART,Shopping
+FIRSTCRY,Shopping
+PEPPERFRY,Shopping
+URBANIC,Shopping
+DECATHLON,Shopping
+CROMA,Shopping
+RELIANCE DIGITAL,Shopping
+MAX FASHION,Shopping
+WESTSIDE,Shopping
+LIFESTYLE,Shopping
+HM,Shopping
+ZARA,Shopping
+UNIQLO,Shopping
+JIO,Bills
+AIRTEL,Bills
+VI,Bills
+VODAFONE,Bills
+BSNL,Bills
+MTNL,Bills
+TATA POWER,Bills
+ADANI ELECTRICITY,Bills
+BSES,Bills
+BESCOM,Bills
+MSEB,Bills
+ACT FIBERNET,Bills
+HATHWAY,Bills
+JIOFIBER,Bills
+INDANE GAS,Bills
+HP GAS,Bills
+BHARAT GAS,Bills
+DELHI JAL BOARD,Bills
+NETFLIX,Entertainment
+SPOTIFY,Entertainment
+HOTSTAR,Entertainment
+DISNEY HOTSTAR,Entertainment
+AMAZON PRIME,Entertainment
+PRIME VIDEO,Entertainment
+SONY LIV,Entertainment
+SONYLIV,Entertainment
+ZEE5,Entertainment
+APPLE MUSIC,Entertainment
+YOUTUBE PREMIUM,Entertainment
+YOUTUBE MUSIC,Entertainment
+GAANA,Entertainment
+JIOSAAVN,Entertainment
+BOOKMYSHOW,Entertainment
+PVR,Entertainment
+INOX,Entertainment
+CINEPOLIS,Entertainment
+APOLLO PHARMACY,Health
+APOLLO,Health
+MEDPLUS,Health
+PHARMEASY,Health
+NETMEDS,Health
+1MG,Health
+TATA 1MG,Health
+CIPLA,Health
+PRACTO,Health
+DOCSAPP,Health
+MFINE,Health
+MAX HEALTHCARE,Health
+FORTIS,Health
+MANIPAL HOSPITAL,Health
+AIIMS,Health
+METROPOLIS,Health
+THYROCARE,Health
+DR LAL PATH LAB,Health
+SRL DIAGNOSTICS,Health
+BIGBASKET,Groceries
+BLINKIT,Groceries
+ZEPTO,Groceries
+DUNZO,Groceries
+DMART,Groceries
+DMART READY,Groceries
+RELIANCE FRESH,Groceries
+RELIANCE SMART,Groceries
+SPENCER,Groceries
+MORE RETAIL,Groceries
+NATURES BASKET,Groceries
+GROFERS,Groceries
+SWIGGY GROCERY,Groceries
+JIOMART,Groceries
+AMAZON FRESH,Groceries

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">PaisaVault</string>
+    <string name="home_add">Add expense</string>
+    <string name="home_month_total_label">This month</string>
+    <string name="home_recent">Recent</string>
+    <string name="home_see_all">See all</string>
+    <string name="home_empty_title">No transactions yet</string>
+    <string name="home_empty_subtitle">Tap the button below to add your first expense.</string>
+    <string name="home_pending_review">Review</string>
+    <plurals name="home_pending_banner">
+        <item quantity="one">%d SMS transaction needs review</item>
+        <item quantity="other">%d SMS transactions need review</item>
+    </plurals>
+    <string name="uncategorized">Uncategorized</string>
+</resources>

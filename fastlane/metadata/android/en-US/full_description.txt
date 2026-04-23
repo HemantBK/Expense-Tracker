@@ -1,0 +1,26 @@
+PaisaVault is a local-first, privacy-preserving expense tracker for Android. It auto-parses your bank and UPI transaction SMS, categorizes them with on-device AI, and stores everything in an encrypted local database.
+
+No cloud. No account. No analytics. No proprietary SDKs.
+
+FEATURES
+- Automatic transaction tracking by parsing SMS from bank and UPI senders.
+- On-device ML categorization (no data ever leaves your phone).
+- AES-256 encrypted local database via SQLCipher.
+- Biometric app lock with auto-lock.
+- Monthly spending dashboard with charts and budget alerts.
+- Receipt OCR via Tesseract (offline).
+- Encrypted CSV export and backup with passphrase you control.
+
+PRIVACY
+- 100% free and open source (GPL-3.0-or-later).
+- No INTERNET permission required.
+- No third-party SDKs, no analytics, no tracking.
+- Reads SMS only to extract transaction details; never accesses banking apps.
+- Source code auditable at https://github.com/HemantBK/Expense-Tracker
+
+PERMISSIONS
+- READ_SMS, RECEIVE_SMS: detect transaction SMS from bank/UPI senders.
+- USE_BIOMETRIC: biometric app lock.
+- CAMERA (optional): receipt OCR.
+
+We do NOT request: contacts, location, accessibility services, or network access.

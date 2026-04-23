@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="review_title">Review SMS transactions</string>
+    <string name="review_empty_title">Nothing to review</string>
+    <string name="review_empty_subtitle">New transactions parsed from SMS will appear here for confirmation.</string>
+    <string name="review_pick_category">Category</string>
+    <string name="review_confidence">Parser confidence: %1$d%%</string>
+    <string name="review_confirm">Confirm</string>
+    <string name="review_reject">Reject</string>
+</resources>

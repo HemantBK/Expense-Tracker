@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="txns_title">Transactions</string>
+    <string name="txns_empty_title">No transactions this month</string>
+    <string name="uncategorized">Uncategorized</string>
+</resources>

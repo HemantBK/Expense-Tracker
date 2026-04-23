@@ -1,0 +1,27 @@
+# CODEOWNERS
+# Every PR requires approval from the relevant owner(s).
+# Order matters — later rules override earlier rules.
+
+# Global fallback: project lead reviews everything
+*                                               @HemantBK
+
+# Security-sensitive modules
+/core/security/                                 @HemantBK
+/core/database/                                 @HemantBK
+/data/sms/                                      @HemantBK
+/app/src/main/AndroidManifest.xml               @HemantBK
+/app/src/main/res/xml/                          @HemantBK
+SECURITY.md                                     @HemantBK
+PRIVACY.md                                      @HemantBK
+
+# Build infrastructure
+/build-logic/                                   @HemantBK
+/gradle/                                        @HemantBK
+*.gradle.kts                                    @HemantBK
+gradle.properties                               @HemantBK
+
+# CI
+/.github/                                       @HemantBK
+
+# Architecture Decision Records
+/docs/adr/                                      @HemantBK

@@ -1,185 +1,149 @@
 # PaisaVault
 
-**A local-first, privacy-preserving expense tracker for Android. Built entirely with free & open-source software.**
+> Local-first expense tracker for Android. Parses your bank and UPI SMS, categorizes with
+> on-device ML, keeps everything in an encrypted database on your phone. Free and open
+> source, GPL-3.0.
 
-PaisaVault auto-parses your bank & UPI transaction SMS, categorizes them with on-device AI, and stores everything in an encrypted local database. No cloud. No account. No analytics. No proprietary SDKs. Your financial data never leaves your phone.
-
-**100% FOSS** — every runtime dependency is OSI-approved or equivalently free. No Google Play Services. No ML Kit. No Firebase. Eligible for F-Droid inclusion.
-
----
-
-## Why PaisaVault?
-
-Most expense trackers either make you enter every transaction by hand or force you to hand your financial data to a cloud server. PaisaVault does neither:
-
-- **100% local storage** — your data lives in an AES-256 encrypted SQLite database on your phone
-- **Automatic tracking** — reads transaction SMS passively, no need to enter anything manually
-- **On-device AI** — merchant categorization runs entirely on your phone, model never phones home
-- **Zero cloud dependency** — the app works with the internet permission revoked
-- **No bank app access** — only reads SMS; cannot see balances, move money, or interact with banking apps
+[![License: GPL-3.0-or-later](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Android%209%2B-green.svg)](#requirements)
+[![FOSS](https://img.shields.io/badge/FOSS-100%25-brightgreen.svg)](docs/architecture.md#foss-policy)
 
 ---
 
-## Features
+## What it does
 
-### v1.0 (MVP)
-- Manual expense entry with categories
-- Encrypted local database
-- Monthly spending dashboard with charts
-- Budget limits per category
-- Biometric app lock (fingerprint/face)
+- Reads bank and UPI transaction SMS (HDFC, SBI, ICICI, Axis, Kotak, PhonePe, Google Pay,
+  Paytm) and turns them into transactions.
+- Categorizes merchants on-device with a small rule + logistic-regression classifier.
+- Shows monthly spend, category breakdown, and insights (month-over-month, anomaly,
+  budget-limit warnings).
+- Lets you set per-category budgets and alerts you at 80 % burn and again when exceeded.
+- Scans paper receipts via Tesseract OCR and pre-fills the add form.
+- Exports an encrypted CSV (passphrase you choose) to any folder via the Storage Access
+  Framework.
 
-### v1.1 (SMS Automation)
-- Historical SMS scan on first launch
-- Live transaction detection from new SMS
-- Regex-based parser for major Indian banks & UPI apps (HDFC, SBI, ICICI, Axis, Kotak, PhonePe, Google Pay, Paytm)
-- User review queue before auto-save
+All of the above runs on your device. The app declares no `INTERNET` permission.
 
-### v1.2 (AI/ML)
-- On-device merchant → category classifier (TensorFlow Lite)
-- Anomaly detection for unusual spending
-- Monthly insight summaries
-- Natural language query (optional, on-device LLM)
+## What it does not do
 
-### v1.3 (Polish)
-- Receipt OCR via Tesseract4Android (Apache 2.0)
-- Encrypted CSV export/import
-- Encrypted local backup to user-chosen folder
-- Custom categories & icons
+- It does not talk to your bank app or authenticate to any bank.
+- It does not send any data to any server — including ours, because there is none.
+- It does not include Google Play Services, Firebase, ML Kit, or any proprietary SDK.
 
-### Future (v2.0+)
-- iOS version (manual entry + receipt OCR only — iOS forbids SMS reading)
-- Desktop companion (local-only sync via encrypted file)
+## Permissions
 
----
+- `READ_SMS`, `RECEIVE_SMS` — detect transaction messages from known bank senders
+- `USE_BIOMETRIC` — optional app lock
 
-## Privacy & Security
-
-| Protection | Implementation |
-|---|---|
-| Data at rest | AES-256 encrypted SQLite via SQLCipher |
-| Keys | Hardware-backed Android Keystore |
-| App access | BiometricPrompt (fingerprint/face) + 60s auto-lock |
-| Network | HTTPS-only, no analytics SDKs, INTERNET permission optional |
-| Permissions | Minimal: `READ_SMS`, `RECEIVE_SMS`, `USE_BIOMETRIC` only |
-| Backups | Excluded from Google Cloud Backup by default |
-| Code | R8 obfuscation on release builds |
-| Bank apps | **Never accessed.** SMS reading is passive and read-only. |
-
-### Permissions rationale
-- `READ_SMS` — scan historical transaction SMS on first launch
-- `RECEIVE_SMS` — detect new transactions as they arrive
-- `USE_BIOMETRIC` — app lock
-
-We do **not** request: contacts, location, camera (unless you enable OCR), storage, accessibility services, or query-all-packages.
-
----
-
-## Tech Stack
-
-All runtime components are free and open-source.
-
-| Component | Choice | License |
-|---|---|---|
-| Language | Kotlin | Apache 2.0 |
-| UI | Jetpack Compose + Material 3 | Apache 2.0 |
-| Database | Room + SQLCipher for Android (Community) | Apache 2.0 / BSD-style |
-| DI | Hilt (Dagger) | Apache 2.0 |
-| Async | Kotlinx Coroutines + Flow | Apache 2.0 |
-| ML runtime | TensorFlow Lite | Apache 2.0 |
-| OCR | Tesseract4Android | Apache 2.0 |
-| On-device LLM (optional) | Phi-2 (MIT) / TinyLlama (Apache 2.0) via llama.cpp-android | MIT / Apache 2.0 |
-| SMS | AOSP BroadcastReceiver + ContentResolver | Apache 2.0 |
-| Background | WorkManager | Apache 2.0 |
-| Auth | AndroidX BiometricPrompt | Apache 2.0 |
-| Charts | Vico | Apache 2.0 |
-| Testing | JUnit 4, MockK, Turbine | EPL / Apache 2.0 |
-| Build | Gradle + Android Gradle Plugin | Apache 2.0 |
-| JDK | Eclipse Temurin / Microsoft OpenJDK 17 | GPL + Classpath exception |
-| Security scan | MobSF (dev-time only) | GPL-3.0 |
-
-**IDE**: Android Studio is free to use and its core is Apache 2.0, but it bundles a few closed-source JetBrains components. Strict FOSS alternative: **IntelliJ IDEA Community Edition** (Apache 2.0) with the Android plugin, or pure CLI Gradle builds.
-
-**Explicitly excluded** (to preserve FOSS status):
-- Google Play Services, Firebase, Google ML Kit
-- Crashlytics, Analytics, AppsFlyer, any tracking SDK
-- Gemma, any non-OSI-licensed model weights
+Camera for receipt OCR uses `TakePicturePreview`, which routes through the system camera
+and does not require the `CAMERA` permission.
 
 ---
 
 ## Requirements
 
-- Android 9.0 (API 28) or higher
-- ~50 MB free storage
-- For development: Android Studio Hedgehog (2023.1.1) or newer, JDK 17
+- Android 9.0 (API 28) or newer
+- ~50 MB free storage (more if you enable OCR and bundle the 2 MB Tesseract data)
+
+## Install (personal use)
+
+1. Download `app-release.apk` + `checksums.txt` from the latest [Release](https://github.com/HemantBK/Expense-Tracker/releases).
+2. `sha256sum -c checksums.txt` — should print `app-release.apk: OK`.
+3. On your phone: **Settings → Apps → Special access → Install unknown apps**, enable
+   for your file manager.
+4. Open the APK and install.
+
+Not on Google Play. SMS permissions face strict Play review; sideload or wait for F-Droid.
 
 ---
 
-## Installation (Personal Use)
+## Getting started (development)
 
-The app is not published to Google Play — SMS permissions have strict Play Store review requirements. Sideload the APK onto your own device:
-
-1. Download the latest `app-release.apk` from the project's releases
-2. On your phone: Settings → Security → Allow installs from unknown sources (for your file manager)
-3. Open the APK with a file manager and install
-4. Grant permissions when prompted
-
-For development, see [BUILD.md](BUILD.md).
-
----
-
-## Project Structure
-
-```
-app/
-├── app/                          # Android app module
-│   ├── src/main/
-│   │   ├── java/com/paisavault/
-│   │   │   ├── data/             # Room DB, repositories, SMS parser
-│   │   │   ├── domain/           # Use cases, models
-│   │   │   ├── ml/               # TFLite wrapper, categorizer
-│   │   │   ├── ui/               # Compose screens, ViewModels
-│   │   │   ├── security/         # Keystore, biometric, encryption
-│   │   │   └── di/               # Hilt modules
-│   │   └── res/                  # Resources
-│   └── build.gradle.kts
-├── ml-training/                  # Python scripts to train TFLite model
-├── BUILD.md                      # Full build & implementation plan
-└── README.md
+```bash
+git clone https://github.com/HemantBK/Expense-Tracker.git
+cd Expense-Tracker
 ```
 
+Core toolchain: JDK 17, Android Studio Ladybug (2024.2.1+), Node.js 20 (for commit hooks).
+
+First-time setup (once):
+
+```bash
+# Generate the Gradle wrapper jar if you don't have Gradle installed globally,
+# Android Studio will do this automatically on first project open.
+gradle wrapper --gradle-version 8.10.2 --distribution-type bin
+
+# Install commit hooks
+npm install && npx lefthook install
+```
+
+Build and run:
+
+```bash
+./gradlew :app:assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+**Optional ML assets** — the app works without these but with reduced functionality:
+
+```bash
+# 1. Train the merchant classifier (~30 seconds)
+cd ml-training
+python -m venv .venv && source .venv/bin/activate   # Win: .venv\Scripts\activate
+pip install -r requirements.txt && python train.py
+cd ..
+
+# 2. Download Tesseract language data for receipt OCR (~2 MB)
+curl -L -o core/ml/src/main/assets/tessdata/eng.traineddata \
+    https://github.com/tesseract-ocr/tessdata_fast/raw/main/eng.traineddata
+```
+
+See [`docs/repo-hygiene.md`](docs/repo-hygiene.md) for why these aren't in git.
+
 ---
 
-## Roadmap
+## Documentation
 
-See [BUILD.md](BUILD.md) for the detailed phase-by-phase plan.
-
-- [ ] **Phase 1** — MVP with manual entry and encrypted storage
-- [ ] **Phase 2** — SMS parsing and automation
-- [ ] **Phase 3** — On-device ML categorization
-- [ ] **Phase 4** — Insights, OCR, export/backup
-- [ ] **Phase 5** — iOS companion app
+| Doc | Purpose |
+|---|---|
+| [docs/architecture.md](docs/architecture.md) | Module graph, layers, data flow, tech stack |
+| [docs/development.md](docs/development.md) | Dev setup, build loop, style rules |
+| [docs/repo-hygiene.md](docs/repo-hygiene.md) | What's committed vs local |
+| [docs/fdroid-readiness.md](docs/fdroid-readiness.md) | F-Droid submission checklist |
+| [BUILD.md](BUILD.md) | Phase-by-phase build plan (source of truth for engineering work) |
+| [CHANGELOG.md](CHANGELOG.md) | What shipped in each release |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Branching, commits, PR checklist |
+| [SECURITY.md](SECURITY.md) | Vulnerability reporting |
+| [PRIVACY.md](PRIVACY.md) | What's processed (nothing off-device) |
+| [`docs/adr/`](docs/adr) | Architecture Decision Records (one file per decision) |
+| [ml-training/](ml-training) | Python pipeline that trains the merchant classifier |
 
 ---
 
-## Contributing
+## Security posture (summary)
 
-This is a personal project. Issues and discussion welcome; PRs considered case-by-case.
+| Area | Guarantee |
+|---|---|
+| Data at rest | AES-256 via SQLCipher, key in Android Keystore |
+| App access | `BiometricPrompt` with `BIOMETRIC_STRONG` + device-credential fallback |
+| Task switcher | `FLAG_SECURE` blanks the preview |
+| Backups | Excluded from Google cloud backup and device transfer |
+| Network | No `INTERNET` permission in 1.0 |
+| Exports | Passphrase-encrypted: PBKDF2 (600k) + AES-256-GCM |
 
-Security disclosures: please report privately rather than filing a public issue.
+Full threat model in [docs/architecture.md#security](docs/architecture.md#security).
+Report a vulnerability privately via [SECURITY.md](SECURITY.md).
 
 ---
 
 ## License
 
-To be decided before first release. Recommended: **GPL-3.0** (forces derivatives to stay open — matches the FOSS-only ethos) or **Apache 2.0** (more permissive, includes patent grant). Avoid MIT here because it lacks the explicit patent clause.
-
-### Third-party licenses
-
-All dependencies and their licenses are listed in [BUILD.md § 16](BUILD.md). A `NOTICE` file with the full license text of every bundled library will ship with the release APK and be available from the Settings → About screen.
-
----
+**GPL-3.0-or-later.** Every source file carries an SPDX header; see [LICENSE](LICENSE).
+Third-party licenses ship in the release APK and are viewable in-app at
+**Settings → About → Open source licenses**.
 
 ## Disclaimer
 
-PaisaVault reads SMS to track expenses you initiated. It does not interact with banking apps, authenticate to banks, or handle money. You remain responsible for verifying that parsed transactions match reality. The authors make no warranty of accuracy or fitness for any purpose.
+PaisaVault reads SMS to track expenses you initiated. It does not interact with banking
+apps, authenticate to banks, or handle money. You remain responsible for verifying
+parsed transactions match reality.

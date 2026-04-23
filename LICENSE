@@ -1,0 +1,32 @@
+                    GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+PaisaVault is licensed under the GNU General Public License v3.0 or later.
+
+This repository contains only a reference to the license. The full text of
+GPL-3.0-or-later is available at:
+
+    https://www.gnu.org/licenses/gpl-3.0.txt
+
+A copy of the full license MUST be shipped with any distribution. When building
+the release APK, CI fetches the canonical text and bundles it into the APK (see
+BUILD.md § 33). Forks should either keep this reference file and include the
+full text from the URL above, or replace this file with the full license text.
+
+SPDX-License-Identifier: GPL-3.0-or-later
+Copyright (c) 2026 PaisaVault contributors
+
+----------------------------------------------------------------------
+Short summary (NOT a substitute for the full license):
+
+  - You may use, study, share, and modify this software.
+  - If you distribute modified or unmodified versions, you must do so under
+    GPL-3.0-or-later and make the complete corresponding source available.
+  - There is NO WARRANTY, to the extent permitted by law.
+
+Full license: https://www.gnu.org/licenses/gpl-3.0.txt
+----------------------------------------------------------------------

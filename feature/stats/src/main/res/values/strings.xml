@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="stats_title">Stats</string>
+    <string name="stats_month_total">This month spent</string>
+    <string name="stats_breakdown">By category</string>
+    <string name="stats_budgets_title">Budgets</string>
+    <string name="stats_insights_title">Insights</string>
+    <string name="stats_insight_spend_up">%1$s spending is up %2$d%% vs last month</string>
+    <string name="stats_insight_spend_down">%1$s spending is down %2$d%% vs last month</string>
+    <string name="stats_insight_anomaly">Unusually large %1$s transaction this month — worth a look</string>
+    <string name="stats_insight_budget_near">%1$s budget is 80%%+ used</string>
+    <string name="stats_insight_budget_over">%1$s budget exceeded</string>
+    <string name="stats_empty_title">Nothing to chart yet</string>
+    <string name="stats_empty_subtitle">Add some transactions and come back.</string>
+    <string name="uncategorized">Uncategorized</string>
+</resources>

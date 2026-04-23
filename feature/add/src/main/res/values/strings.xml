@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_title">Add expense</string>
+    <string name="add_amount">Amount</string>
+    <string name="add_merchant">Merchant or description</string>
+    <string name="add_note_optional">Note (optional)</string>
+    <string name="add_category">Category</string>
+    <string name="add_suggested">Suggested: %1$s</string>
+    <string name="add_save">Save</string>
+    <string name="add_error_save">Could not save. Please try again.</string>
+    <string name="add_scan_receipt">Scan receipt</string>
+    <string name="add_scan_receipt_working">Reading receipt…</string>
+    <string name="add_ocr_done">Filled from receipt. Review and save.</string>
+    <string name="add_ocr_nothing_found">Couldn\'t find an amount on that image. Enter manually.</string>
+    <string name="add_ocr_unavailable">Receipt scanning is unavailable on this build.</string>
+    <string name="cd_back">Back</string>
+</resources>

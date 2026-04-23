@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="settings_lock_title">App lock</string>
+    <string name="settings_lock_subtitle">Require biometric or device PIN to open the app</string>
+    <string name="settings_biometric_title">Enable app lock</string>
+    <string name="settings_biometric_subtitle">Confirm with your fingerprint, face, or device PIN.</string>
+    <string name="settings_sms_title">SMS tracking</string>
+    <string name="settings_sms_desc">PaisaVault reads transaction SMS from known bank and UPI senders only. Nothing is sent off-device. You can revoke permission at any time in Android Settings.</string>
+    <string name="settings_sms_enable">Enable SMS tracking</string>
+    <string name="settings_sms_rescan">Rescan SMS inbox</string>
+    <string name="settings_sms_scanning">Scanning %1$d of %2$d messages</string>
+    <string name="settings_budgets_entry">Manage budgets</string>
+    <string name="settings_budgets_subtitle">Set monthly spending limits per category</string>
+    <string name="settings_export_entry">Export data</string>
+    <string name="settings_export_subtitle">Encrypted CSV you choose the passphrase for</string>
+    <string name="settings_about">About PaisaVault</string>
+    <string name="settings_about_desc">Local-first expense tracker. Your data never leaves your phone.</string>
+    <string name="cd_back">Back</string>
+
+    <string name="budgets_title">Budgets</string>
+    <string name="budgets_subtitle">Tap a category to set or edit a monthly budget.</string>
+    <string name="budgets_not_set">No budget set</string>
+    <string name="budgets_set">Set</string>
+    <string name="budgets_edit">Edit</string>
+    <string name="budgets_delete">Delete budget</string>
+    <string name="budgets_dialog_title">Budget for %1$s</string>
+    <string name="budgets_amount_label">Amount per month</string>
+    <string name="budgets_save">Save</string>
+    <string name="budgets_cancel">Cancel</string>
+
+    <string name="export_title">Export data</string>
+    <string name="export_body">Exports your verified transactions to an encrypted CSV you can keep as a backup or feed back into the model trainer.</string>
+    <string name="export_passphrase_title">Set export passphrase</string>
+    <string name="export_passphrase_label">Passphrase</string>
+    <string name="export_confirm_label">Confirm passphrase</string>
+    <string name="export_start">Export</string>
+    <string name="export_success">Export complete.</string>
+    <string name="export_error_mismatch">Passphrases don\'t match.</string>
+    <string name="export_error_short">Passphrase must be at least 8 characters.</string>
+    <string name="export_error_generic">Export failed. Please try again.</string>
+</resources>

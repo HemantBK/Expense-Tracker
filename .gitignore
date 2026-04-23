@@ -1,0 +1,125 @@
+# ============================================================
+# PaisaVault .gitignore
+# Rule of thumb: source and config are committed; generated,
+# derived, secret, or machine-specific files are not.
+# See docs/repo-hygiene.md for the full local-vs-committed matrix.
+# ============================================================
+
+# --- Gradle outputs & caches --------------------------------
+.gradle/
+build/
+out/
+# Keep the wrapper jar committed (project bootstrap).
+!gradle/wrapper/gradle-wrapper.jar
+
+# --- Android / Kotlin incrementals --------------------------
+.kotlin/
+.cxx/
+.externalNativeBuild/
+/captures/
+
+# --- IDE (Android Studio / IntelliJ / VS Code) --------------
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+# Keep editorconfig + gitattributes — they shape everyone's IDE identically.
+!.editorconfig
+!.gitattributes
+
+# --- Machine-specific config --------------------------------
+local.properties
+
+# --- Signing & secrets  ** NEVER COMMIT **  -----------------
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.pem
+*.key
+keystore.properties
+signing.properties
+google-services.json
+secrets.properties
+
+# --- CI / release artifacts ---------------------------------
+# Output APKs/AABs. We ship these via GitHub Releases, not git.
+*.apk
+*.aab
+*.dex
+outputs/
+/app/release/
+/app/debug/
+
+# --- Logs / crash / profiling -------------------------------
+*.log
+*.hprof
+/build-reports/
+**/build/outputs/
+
+# --- Fastlane runtime artifacts -----------------------------
+/fastlane/report.xml
+/fastlane/Preview.html
+/fastlane/screenshots/
+/fastlane/test_output/
+# Keep the metadata/ tree (store listings, changelogs).
+!fastlane/metadata/
+
+# --- Python (ml-training) -----------------------------------
+ml-training/.venv/
+ml-training/venv/
+ml-training/env/
+ml-training/__pycache__/
+ml-training/**/__pycache__/
+ml-training/*.egg-info/
+ml-training/.pytest_cache/
+ml-training/artifacts/
+
+# --- Node (dev-time commit hooks) ---------------------------
+node_modules/
+.lefthook-local/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# Keep lockfiles — reproducible dev-tool versions.
+!package-lock.json
+!yarn.lock
+
+# --- Large, generated, or user-specific ML assets -----------
+# model_v1.json is a BUILD OUTPUT of ml-training/train.py.
+# Not committed — regenerated per machine or by F-Droid at build time.
+# See docs/repo-hygiene.md.
+core/ml/src/main/assets/model_v1.json
+
+# Tesseract language data is a large binary blob; download on demand.
+# See core/ml/src/main/assets/tessdata/README.md.
+core/ml/src/main/assets/tessdata/*.traineddata
+core/ml/src/main/assets/tessdata/*.bin
+
+# LLM weights (for future Phase 4.x LLM query feature)
+*.gguf
+*.onnx
+*.tflite
+# But DO keep the TFLite runtime native libraries if vendored (not our case).
+
+# --- Benchmark outputs --------------------------------------
+**/benchmark/build/outputs/
+**/baselineprofile/build/outputs/
+# Keep the generated baseline-prof.txt — it's a build input for shipped APKs.
+!app/src/main/baseline-prof.txt
+!app/src/main/baseline-prof.txt.gz
+
+# --- OS cruft -----------------------------------------------
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# --- Editor swap / backup -----------------------------------
+*.swp
+*.swo
+*~
+.#*
+\#*\#

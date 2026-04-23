@@ -1,0 +1,4 @@
+# Pinned for reproducibility. See MODEL_CARD.md.
+scikit-learn==1.5.2
+numpy==2.1.1
+pandas==2.2.3

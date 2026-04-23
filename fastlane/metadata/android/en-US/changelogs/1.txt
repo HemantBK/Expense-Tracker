@@ -1,0 +1,9 @@
+PaisaVault 1.0.0 — first stable release.
+
+Highlights:
+- Auto-parse transaction SMS from Indian banks and UPI apps
+- On-device ML merchant categorization (no network, no Google services)
+- Budget tracking with monthly burn-rate alerts and anomaly insights
+- Receipt scanning via on-device Tesseract OCR
+- Passphrase-encrypted CSV exports
+- 100% free and open source, GPL-3.0

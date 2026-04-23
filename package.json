@@ -1,0 +1,14 @@
+{
+  "name": "paisavault-dev-tools",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Dev-time tooling for PaisaVault (commit hooks + linters). Not shipped in the app.",
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "lefthook": "^1.7.22"
+  },
+  "scripts": {
+    "prepare": "lefthook install"
+  }
+}
