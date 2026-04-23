@@ -1,4 +1,4 @@
-PaisaVault is a local-first, privacy-preserving expense tracker for Android. It auto-parses your bank and UPI transaction SMS, categorizes them with on-device AI, and stores everything in an encrypted local database.
+Expense Tracker is a local-first, privacy-preserving expense tracker for Android. It auto-parses your bank and UPI transaction SMS, categorizes them with on-device AI, and stores everything in an encrypted local database.
 
 No cloud. No account. No analytics. No proprietary SDKs.
 

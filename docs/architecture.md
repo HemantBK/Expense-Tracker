@@ -4,63 +4,134 @@
 >
 > This document describes the system as it ships. For the phased plan that got us here
 > see [BUILD.md](../BUILD.md). For individual decisions see [`docs/adr/`](adr).
+>
+> **Diagrams** use Mermaid (renders inline on GitHub) and D2 (richer layered graphs,
+> rendered to SVG — see [`docs/diagrams/README.md`](diagrams/README.md)).
 
 ---
 
 ## Contents
 
-1. [Module graph](#module-graph)
-2. [Dependency rules](#dependency-rules)
-3. [Data flow](#data-flow)
-4. [State management (MVI)](#state-management-mvi)
-5. [Error taxonomy](#error-taxonomy)
-6. [Security](#security)
-7. [ML pipeline](#ml-pipeline)
-8. [Tech stack](#tech-stack)
-9. [FOSS policy](#foss-policy)
+1. [System context (C4)](#system-context-c4)
+2. [Module graph](#module-graph)
+3. [Dependency rules](#dependency-rules)
+4. [Data flow](#data-flow)
+5. [State management (MVI)](#state-management-mvi)
+6. [Error taxonomy](#error-taxonomy)
+7. [Security](#security)
+8. [ML pipeline](#ml-pipeline)
+9. [Tech stack](#tech-stack)
+10. [FOSS policy](#foss-policy)
+
+---
+
+## System context (C4)
+
+One level above the codebase. Who the app talks to, and nothing more.
+
+```mermaid
+C4Context
+    title System context — Expense Tracker
+    Person(user, "User", "Owns a phone running Android 9+")
+    System(app, "Expense Tracker", "Local-first expense tracker (this repo)")
+    System_Ext(banks, "Bank / UPI providers", "Originate transaction SMS")
+    System_Ext(inbox, "Android SMS inbox", "Stores incoming SMS")
+    System_Ext(saf, "Storage Access Framework", "User-chosen files / folders")
+    System_Ext(cam, "System camera", "Receipt capture")
+
+    Rel(banks, inbox, "send transaction SMS")
+    Rel(inbox, app, "BroadcastReceiver + ContentResolver (read-only)")
+    Rel(user, app, "add, review, budget, scan, export")
+    Rel(app, saf, "encrypted .pvxc export (user-initiated)")
+    Rel(user, cam, "captures receipt")
+    Rel(cam, app, "bitmap (no persistent camera access)")
+```
+
+The only outside systems are the Android inbox (read-only SMS access), the system
+camera activity, and SAF (a user-chosen file location for encrypted exports). No
+cloud, no API, no third-party backend.
 
 ---
 
 ## Module graph
 
-```
-┌───────────────────────────────────────────────────────────────┐
-│                              :app                             │
-│          (MainActivity, NavHost, DI wiring, ProcessLifecycle) │
-└───────────┬─────────────────────────┬─────────────────────────┘
-            │                         │
- ┌──────────▼──────────┐   ┌──────────▼──────────────┐
- │    :feature:*       │   │    :data:*              │
- │ home, transactions, │   │ transaction,            │
- │ add, stats,         │   │ sms, category           │
- │ sms-review,         │   └──────────┬──────────────┘
- │ settings, onboarding│              │
- └──────────┬──────────┘              │
-            │                         │
-            └────────┬────────────────┘
-                     ▼
-          ┌────────────────────┐
-          │  :core:domain      │  (pure Kotlin, no Android)
-          │  models, use cases │
-          │  repository ports  │
-          └──────────┬─────────┘
-                     │
-  ┌──────────┬───────┼────────┬────────┬─────────┬─────────┐
-  ▼          ▼       ▼        ▼        ▼         ▼         ▼
-:core:    :core:   :core:   :core:   :core:    :core:    :core:
-common    ui       design-  database security  datastore ml
-                   system
-                                                          │
-                                                          ▼
-                                                :core:ml also provides
-                                                ReceiptOcr, MerchantClassifier
-                                                impls for :data:sms and
-                                                :feature:add
+22 modules grouped by layer. The headline version below is Mermaid for inline
+readability; the presentation-quality version with layer-aware layout lives in
+[`diagrams/module-graph.d2`](diagrams/module-graph.d2) and renders to
+[`diagrams/module-graph.svg`](diagrams/module-graph.svg) (regenerate with
+`d2 --layout=elk module-graph.d2 module-graph.svg` — see
+[`diagrams/README.md`](diagrams/README.md)).
 
-:benchmark     :baselineprofile     (separate `com.android.test` modules)
+```mermaid
+flowchart TB
+    App[":app"]:::appNode
+
+    subgraph features["Feature layer"]
+        direction LR
+        H[":feature:home"]
+        T[":feature:transactions"]
+        A[":feature:add"]
+        S[":feature:stats"]
+        R[":feature:sms-review"]
+        Se[":feature:settings"]
+        O[":feature:onboarding"]
+    end
+
+    subgraph data["Data layer"]
+        direction LR
+        DT[":data:transaction"]
+        DS[":data:sms"]
+        DC[":data:category"]
+    end
+
+    subgraph corePure["Core — pure Kotlin (no Android)"]
+        direction LR
+        Dom[":core:domain"]
+        Com[":core:common"]
+    end
+
+    subgraph coreAndroid["Core — Android libraries"]
+        direction LR
+        DB[":core:database"]
+        Ds[":core:datastore"]
+        Sec[":core:security"]
+        Dsys[":core:design-system"]
+        UI[":core:ui"]
+        ML[":core:ml"]
+        TT[":core:testing"]
+    end
+
+    subgraph perf["Performance test modules"]
+        direction LR
+        B[":benchmark"]
+        BP[":baselineprofile"]
+    end
+
+    App --> features
+    App --> data
+    features --> corePure
+    features --> coreAndroid
+    data --> corePure
+    data --> coreAndroid
+    coreAndroid --> corePure
+    perf --> App
+
+    classDef appNode fill:#2E7D32,stroke:#1B5E20,color:#fff,font-weight:bold
+    classDef featureNode fill:#E3F2FD,stroke:#1565C0,color:#0D47A1
+    classDef dataNode fill:#FFF3E0,stroke:#EF6C00,color:#BF360C
+    classDef corePureNode fill:#F3E5F5,stroke:#6A1B9A,color:#4A148C,font-weight:bold
+    classDef coreAndroidNode fill:#ECEFF1,stroke:#455A64,color:#263238
+    classDef perfNode fill:#FFEBEE,stroke:#C62828,color:#B71C1C,stroke-dasharray: 4 2
+
+    class H,T,A,S,R,Se,O featureNode
+    class DT,DS,DC dataNode
+    class Dom,Com corePureNode
+    class DB,Ds,Sec,Dsys,UI,ML,TT coreAndroidNode
+    class B,BP perfNode
 ```
 
-22 modules total. Every arrow is also a Gradle `implementation` edge.
+Every arrow is a Gradle `implementation` edge. Feature-to-feature and feature-to-data
+edges are compiler-rejected (see [Dependency rules](#dependency-rules)).
 
 ## Dependency rules
 
@@ -89,46 +160,124 @@ rules, open an ADR first.
 
 ## Data flow
 
-### Manual transaction entry
+Four flows cover everything the app does. Each is a sequence diagram so you can trace
+events time-ordered top-to-bottom.
 
-```
-User → AddTxnScreen → AddTxnViewModel.onEvent
-  → AddTransactionUseCase (validate, build Transaction)
-  → TransactionRepository.add (Hilt binds :data:transaction impl)
-  → TransactionDao.insert (Room, SQLCipher-encrypted)
-  → Flow<List<Transaction>> observed by Home / Transactions / Stats
+### 1. Manual transaction entry
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant Screen as AddTxnScreen
+    participant VM as AddTxnViewModel
+    participant UC as AddTransactionUseCase
+    participant Repo as TransactionRepository
+    participant DAO as TransactionDao
+    participant DB as SQLCipher DB
+    participant Obs as Home / Stats flows
+
+    User->>Screen: enter amount, merchant, pick category
+    Screen->>VM: onEvent(OnSaveClick)
+    VM->>UC: invoke(Input(...))
+    UC->>UC: validate (amount > 0, date not future, …)
+    UC->>Repo: add(Transaction)
+    Repo->>DAO: insert(TransactionEntity)
+    DAO->>DB: INSERT encrypted page
+    DB-->>DAO: rowId
+    DAO-->>Repo: Result.Success(id)
+    Repo-->>UC: Result.Success
+    UC-->>VM: Result.Success
+    VM-->>Screen: sendEffect(NavigateBack)
+    DB-->>Obs: Flow emits updated list
 ```
 
-### SMS-parsed transaction
+### 2. SMS-parsed transaction
 
-```
-OS broadcast → SmsReceiver (BROADCAST_SMS-protected)
-  → WorkManager.enqueue(SmsParseWorker)
-  → SmsParser.parse (rule registry: HDFC, SBI, ICICI, Axis, Kotak, PhonePe, GPay, Paytm)
-  → MerchantClassifier.classify (rule fast-path → Kotlin LR fallback)
-  → TransactionRepository.add (userVerified = false)
-  → Home pending banner shows count → SmsReviewScreen
-  → user confirms → markVerified(id) → counted in dashboards
+```mermaid
+sequenceDiagram
+    autonumber
+    participant OS as Android OS
+    participant Rcv as SmsReceiver
+    participant WM as WorkManager
+    participant W as SmsParseWorker
+    participant P as SmsParser<br/>(rule registry)
+    participant Cls as MerchantClassifier<br/>(rule → LR fallback)
+    participant Repo as TransactionRepository
+    participant UI as Home banner +<br/>SmsReviewScreen
+    actor User
+
+    OS->>Rcv: SMS_RECEIVED_ACTION<br/>(BROADCAST_SMS-protected)
+    Rcv->>WM: enqueue OneTimeWorkRequest
+    WM->>W: doWork()
+    W->>P: parse(SmsMessage)
+    P-->>W: ParsedTxn or null
+    W->>Cls: classify(merchant)
+    Cls-->>W: (label, confidence)
+    W->>Repo: add(Transaction, userVerified=false)
+    Repo-->>UI: pendingCount Flow emits
+    Note over UI: banner shows "N need review"
+    User->>UI: opens review queue, confirms
+    UI->>Repo: markVerified(id)
+    Repo-->>UI: dashboard totals now include it
 ```
 
-### Receipt scan
+### 3. Receipt scan
 
-```
-Add screen → TakePicturePreview camera intent → Bitmap
-  → ReceiptOcr.recognize (Tesseract, on-device)
-  → ReceiptParser.parse (priority-amount regex + merchant heuristic)
-  → ViewModel.setState { amountInput, merchantInput } + triggers classifier suggestion
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant Screen as AddTxnScreen
+    participant Cam as System camera<br/>(TakePicturePreview)
+    participant VM as AddTxnViewModel
+    participant OCR as ReceiptOcr<br/>(Tesseract)
+    participant RP as ReceiptParser
+    participant Cls as MerchantClassifier
+
+    User->>Screen: tap "Scan receipt"
+    Screen->>Cam: launch()
+    Cam-->>Screen: Bitmap<br/>(no CAMERA permission held)
+    Screen->>VM: OnReceiptCaptured(bitmap)
+    VM->>OCR: recognize(bitmap)
+    OCR-->>VM: raw text
+    VM->>RP: parse(text)
+    RP-->>VM: ParsedReceipt(amountMinor, merchant?)
+    VM->>Cls: classify(merchant)
+    Cls-->>VM: suggested category
+    VM-->>Screen: state: amount, merchant, suggested category
+    Screen->>User: fields pre-filled; review and save
 ```
 
-### Encrypted export
+### 4. Encrypted export
 
-```
-Settings → ExportScreen → passphrase confirm dialog
-  → ActivityResultContracts.CreateDocument → Uri
-  → ExportEncryptedCsvUseCase
-     → ExportTrainingDataUseCase builds CSV from verified transactions
-     → Encryptor.encrypt (PBKDF2-HMAC-SHA256, 600k iters + AES-256-GCM)
-     → ExportSink.writeBytes (SafExportSink → ContentResolver.openOutputStream)
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant Screen as ExportScreen
+    participant SAF as SAF CreateDocument
+    participant UC as ExportEncryptedCsvUseCase
+    participant CSV as ExportTrainingDataUseCase
+    participant Enc as Encryptor<br/>(PBKDF2 → AES-GCM)
+    participant Sink as SafExportSink
+    participant Fs as User-chosen file
+
+    User->>Screen: passphrase + confirm (≥ 8 chars)
+    Screen->>SAF: launch(filename.pvxc)
+    SAF-->>Screen: content:// target Uri
+    Screen->>UC: invoke(uri, passphrase)
+    UC->>CSV: build CSV from verified transactions
+    CSV-->>UC: csv string
+    UC->>Enc: encrypt(bytes, passphrase)
+    Note over Enc: PBKDF2-HMAC-SHA256<br/>600,000 iterations<br/>→ AES-256-GCM
+    Enc-->>UC: blob [magic|version|iter|salt|iv|ct+tag]
+    UC->>Sink: writeBytes(uri, blob)
+    Sink->>Fs: ContentResolver.openOutputStream.write
+    Fs-->>Sink: OK
+    Sink-->>UC: OK
+    UC-->>Screen: Result.Success
+    Screen->>User: "Export complete"
 ```
 
 ---
@@ -152,6 +301,60 @@ abstract class MviViewModel<S, E, F> : ViewModel() {
 Compose reads state with `collectAsStateWithLifecycle()` and collects effects inside a
 `LaunchedEffect`. Navigation and snackbar calls are always effects — never state — so
 they don't replay on config change.
+
+### The generic MVI lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Initial: ViewModel constructed<br/>initial state injected
+    Initial --> Loading: observer attached<br/>(combine of Flows)
+    Loading --> Content: data arrives
+    Loading --> Error: load fails (DomainError)
+    Content --> Content: onEvent → reducer<br/>(state copy)
+    Content --> Saving: OnSaveClick
+    Saving --> Content: Result.Success
+    Saving --> Error: Result.Failure
+    Error --> Loading: OnRetry
+    Content --> [*]: ViewModel cleared<br/>(nav away / process death)
+
+    note right of Content
+        state.value is always
+        the single source
+        of truth for the UI
+    end note
+
+    note left of Saving
+        effects channel emits:
+        NavigateBack, ShowError,
+        ShowSnackbar — one-shot
+    end note
+```
+
+### Lock state
+
+Orthogonal to any screen's MVI — the `LockGate` composable wraps the whole `NavHost`.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Unlocked: lock feature disabled
+    [*] --> Locked: lock feature enabled on launch
+
+    Unlocked --> Unlocked: app foregrounded<br/>within 60s window
+    Unlocked --> Locked: ProcessLifecycle<br/>onStop + 60s elapsed
+    Locked --> Unlocked: BiometricPrompt success
+
+    note right of Locked
+        LockGate shows prompt.
+        NavHost is not rendered.
+        FLAG_SECURE still active.
+    end note
+
+    note left of Unlocked
+        NavHost visible.
+        AutoLockObserver armed via
+        ProcessLifecycleOwner.
+    end note
+```
 
 ---
 

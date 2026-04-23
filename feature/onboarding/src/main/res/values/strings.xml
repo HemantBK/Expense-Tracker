@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="onboarding_title">Welcome to PaisaVault</string>
+    <string name="onboarding_title">Welcome to Expense Tracker</string>
     <string name="onboarding_subtitle">A local-first expense tracker. Your data stays on this phone, always encrypted.</string>
     <string name="onboarding_continue">Get started</string>
 </resources>

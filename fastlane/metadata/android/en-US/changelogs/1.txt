@@ -1,4 +1,4 @@
-PaisaVault 1.0.0 — first stable release.
+Expense Tracker 1.0.0 — first stable release.
 
 Highlights:
 - Auto-parse transaction SMS from Indian banks and UPI apps

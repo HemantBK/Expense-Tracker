@@ -1,27 +1,36 @@
+# Dependabot configuration.
+#
+# Version updates are currently DISABLED — when we're ready to re-enable
+# them (probably after v1.0 stabilizes), uncomment the `updates:` block
+# below. Security alerts keep working regardless of this file; those are
+# controlled in the repo Settings → Code security → Dependabot alerts.
+
 version: 2
-updates:
-  - package-ecosystem: gradle
-    directory: /
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 5
-    labels:
-      - dependencies
-    groups:
-      androidx:
-        patterns:
-          - "androidx.*"
-      kotlin:
-        patterns:
-          - "org.jetbrains.kotlin*"
-          - "org.jetbrains.kotlinx*"
-      compose:
-        patterns:
-          - "androidx.compose*"
-  - package-ecosystem: github-actions
-    directory: /
-    schedule:
-      interval: weekly
-    labels:
-      - dependencies
-      - ci
+updates: []
+
+# --- When re-enabling, restore the original config below: -------------
+#
+# updates:
+#   - package-ecosystem: gradle
+#     directory: /
+#     schedule:
+#       interval: weekly      # or 'monthly' for lower noise
+#     open-pull-requests-limit: 3
+#     labels:
+#       - dependencies
+#     groups:
+#       androidx:
+#         patterns: ["androidx.*"]
+#       kotlin:
+#         patterns:
+#           - "org.jetbrains.kotlin*"
+#           - "org.jetbrains.kotlinx*"
+#       compose:
+#         patterns: ["androidx.compose*"]
+#   - package-ecosystem: github-actions
+#     directory: /
+#     schedule:
+#       interval: monthly
+#     labels:
+#       - dependencies
+#       - ci

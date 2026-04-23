@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -c \"^\\\\`\\\\`\\\\`mermaid\" /c/Users/91734/Desktop/app/docs/architecture.md)"
+    ]
+  }
+}

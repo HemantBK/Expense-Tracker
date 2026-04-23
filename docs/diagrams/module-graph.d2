@@ -1,0 +1,175 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2026 PaisaVault contributors
+#
+# Module dependency graph for the Expense Tracker Android app.
+# Render:
+#   d2 --theme=0 --layout=elk module-graph.d2 module-graph.svg
+#
+# Dependency rules are enforced by Gradle. See docs/architecture.md#dependency-rules.
+
+direction: down
+vars: {
+  d2-config: {
+    layout-engine: elk
+    pad: 40
+  }
+}
+
+# -------- Classes (shared styling) --------
+classes: {
+  app-node: {
+    style: {
+      fill: "#2E7D32"
+      stroke: "#1B5E20"
+      font-color: white
+      font-size: 16
+      bold: true
+      border-radius: 8
+    }
+  }
+  feature-node: {
+    style: {
+      fill: "#E3F2FD"
+      stroke: "#1565C0"
+      font-color: "#0D47A1"
+      border-radius: 6
+    }
+  }
+  data-node: {
+    style: {
+      fill: "#FFF3E0"
+      stroke: "#EF6C00"
+      font-color: "#BF360C"
+      border-radius: 6
+    }
+  }
+  core-pure-node: {
+    style: {
+      fill: "#F3E5F5"
+      stroke: "#6A1B9A"
+      font-color: "#4A148C"
+      border-radius: 6
+      bold: true
+    }
+  }
+  core-android-node: {
+    style: {
+      fill: "#ECEFF1"
+      stroke: "#455A64"
+      font-color: "#263238"
+      border-radius: 6
+    }
+  }
+  perf-node: {
+    style: {
+      fill: "#FFEBEE"
+      stroke: "#C62828"
+      font-color: "#B71C1C"
+      border-radius: 6
+      stroke-dash: 3
+    }
+  }
+  group-label: {
+    style: {
+      fill: transparent
+      stroke: "#bbbbbb"
+      stroke-dash: 2
+      font-size: 13
+      font-color: "#555"
+      border-radius: 10
+    }
+  }
+}
+
+# -------- App --------
+app: ":app" { class: app-node }
+
+# -------- Features --------
+features: "Feature layer" {
+  class: group-label
+  home: ":feature:home" { class: feature-node }
+  transactions: ":feature:transactions" { class: feature-node }
+  add: ":feature:add" { class: feature-node }
+  stats: ":feature:stats" { class: feature-node }
+  sms-review: ":feature:sms-review" { class: feature-node }
+  settings: ":feature:settings" { class: feature-node }
+  onboarding: ":feature:onboarding" { class: feature-node }
+}
+
+# -------- Data --------
+data: "Data layer" {
+  class: group-label
+  transaction: ":data:transaction" { class: data-node }
+  sms: ":data:sms" { class: data-node }
+  category: ":data:category" { class: data-node }
+}
+
+# -------- Core pure-Kotlin (JVM only, no Android) --------
+core-pure: "Core — pure Kotlin (no Android imports)" {
+  class: group-label
+  domain: ":core:domain" { class: core-pure-node }
+  common: ":core:common" { class: core-pure-node }
+}
+
+# -------- Core Android libs --------
+core-android: "Core — Android libraries" {
+  class: group-label
+  database: ":core:database" { class: core-android-node }
+  datastore: ":core:datastore" { class: core-android-node }
+  security: ":core:security" { class: core-android-node }
+  design-system: ":core:design-system" { class: core-android-node }
+  ui: ":core:ui" { class: core-android-node }
+  ml: ":core:ml" { class: core-android-node }
+  testing: ":core:testing" { class: core-android-node }
+}
+
+# -------- Performance test modules (separate app plugin) --------
+perf: "Performance test modules" {
+  class: group-label
+  benchmark: ":benchmark" { class: perf-node }
+  baselineprofile: ":baselineprofile" { class: perf-node }
+}
+
+# -------- Dependencies --------
+# :app wires everything together
+app -> features.home
+app -> features.transactions
+app -> features.add
+app -> features.stats
+app -> features.sms-review
+app -> features.settings
+app -> features.onboarding
+app -> data.transaction
+app -> data.sms
+app -> data.category
+
+# Features depend on core (never on data or other features)
+features.home -> core-pure.domain
+features.add -> core-android.ml: "OCR + suggest"
+features.settings -> core-android.security: "biometric toggle"
+
+# Data depends on core (domain ports + database)
+data.transaction -> core-android.database
+data.sms -> core-android.database
+data.category -> core-android.database
+data.transaction -> core-pure.domain
+data.sms -> core-pure.domain
+data.category -> core-pure.domain
+data.sms -> core-android.ml: "categorize"
+
+# Core-Android depends on Core-pure
+core-android.database -> core-pure.domain
+core-android.database -> core-android.security: "Keystore key"
+core-android.security -> core-pure.domain
+core-android.ml -> core-pure.domain
+core-android.ml -> core-pure.common
+core-android.ui -> core-pure.common
+core-android.design-system -> core-pure.common
+
+# Features depend on UI + design-system (aggregate edge)
+features -> core-android.ui
+features -> core-android.design-system
+
+# Perf modules target :app
+perf.benchmark -> app: "macrobench"
+perf.baselineprofile -> app: "profile gen"

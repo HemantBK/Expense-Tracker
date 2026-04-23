@@ -35,7 +35,7 @@ fun LockGate(
         LockState.Locked -> LockedScreen(
             onAuthenticate = {
                 BiometricLockManager(activity).authenticate(
-                    title = "Unlock PaisaVault",
+                    title = "Unlock Expense Tracker",
                     subtitle = "Confirm with biometrics or device PIN",
                     onSuccess = { viewModel.unlock() },
                 )
@@ -62,7 +62,7 @@ private fun LockedScreen(onAuthenticate: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "PaisaVault is locked",
+            text = "Expense Tracker is locked",
             style = MaterialTheme.typography.titleLarge,
         )
         Button(onClick = onAuthenticate, modifier = Modifier.padding(top = 24.dp)) {

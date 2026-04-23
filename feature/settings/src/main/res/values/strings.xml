@@ -6,7 +6,7 @@
     <string name="settings_biometric_title">Enable app lock</string>
     <string name="settings_biometric_subtitle">Confirm with your fingerprint, face, or device PIN.</string>
     <string name="settings_sms_title">SMS tracking</string>
-    <string name="settings_sms_desc">PaisaVault reads transaction SMS from known bank and UPI senders only. Nothing is sent off-device. You can revoke permission at any time in Android Settings.</string>
+    <string name="settings_sms_desc">The app reads transaction SMS from known bank and UPI senders only. Nothing is sent off-device. You can revoke permission at any time in Android Settings.</string>
     <string name="settings_sms_enable">Enable SMS tracking</string>
     <string name="settings_sms_rescan">Rescan SMS inbox</string>
     <string name="settings_sms_scanning">Scanning %1$d of %2$d messages</string>
@@ -14,7 +14,7 @@
     <string name="settings_budgets_subtitle">Set monthly spending limits per category</string>
     <string name="settings_export_entry">Export data</string>
     <string name="settings_export_subtitle">Encrypted CSV you choose the passphrase for</string>
-    <string name="settings_about">About PaisaVault</string>
+    <string name="settings_about">About Expense Tracker</string>
     <string name="settings_about_desc">Local-first expense tracker. Your data never leaves your phone.</string>
     <string name="cd_back">Back</string>
 
