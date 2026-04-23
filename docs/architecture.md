@@ -245,8 +245,8 @@ sequenceDiagram
     RP-->>VM: ParsedReceipt(amountMinor, merchant?)
     VM->>Cls: classify(merchant)
     Cls-->>VM: suggested category
-    VM-->>Screen: state: amount, merchant, suggested category
-    Screen->>User: fields pre-filled; review and save
+    VM-->>Screen: updated state — amount, merchant, suggested category
+    Screen->>User: fields pre-filled, ready to review and save
 ```
 
 ### 4. Encrypted export
