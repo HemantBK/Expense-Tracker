@@ -84,7 +84,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation("androidx.lifecycle:lifecycle-process:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-process:2.10.0")
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.compose.material.iconsext)
@@ -101,7 +101,7 @@ dependencies {
     implementation(libs.androidx.tracing.ktx)
 
     // Fragment activity (needed by BiometricPrompt)
-    implementation("androidx.fragment:fragment-ktx:1.8.4")
+    implementation("androidx.fragment:fragment-ktx:1.8.9")
 
     // Tests
     testImplementation(libs.junit)
